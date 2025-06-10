@@ -5,7 +5,7 @@
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-2xl font-semibold mb-6">Profile Settings</h2>
+        <h2 class="text-2xl font-semibold mb-6">Settings</h2>
         
         <div class="flex flex-col md:flex-row gap-8">
             <!-- Profile Photo Section -->

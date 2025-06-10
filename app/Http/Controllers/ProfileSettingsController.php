@@ -17,7 +17,7 @@ class ProfileSettingsController extends Controller
     public function updateProfilePhoto(Request $request)
     {
         $request->validate([
-            'profile_photo' => 'required|image|max:2048', // 2MB max
+            'profile_photo' => 'required|image', // 2MB max
         ]);
 
         // Delete old photo if exists

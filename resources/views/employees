@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('app')
 
 @section('title', 'Employee Management')
 
 @section('content')
-<div class="p-6" x-data="employeeModule()" x-cloak>
+<div x-data="employeeModule()" x-cloak>
     <!-- Employee Actions -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div class="w-full md:w-auto">
@@ -27,9 +27,9 @@
                 class="block w-full md:w-48 pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
             >
                 <option value="">All Departments</option>
-                @foreach($departments as $dept)
-                    <option value="{{ $dept }}">{{ $dept }}</option>
-                @endforeach
+                <template x-for="dept in departments" :key="dept">
+                    <option x-text="dept" :value="dept"></option>
+                </template>
             </select>
             <select 
                 x-model="selectedStatus" 
@@ -75,9 +75,9 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortEmployees('id')">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortEmployees('employee_id')">
                             Employee ID
-                            <i class="fas fa-sort ml-1" :class="{'fa-sort-up': sortColumn === 'id' && sortDirection === 'asc', 'fa-sort-down': sortColumn === 'id' && sortDirection === 'desc'}"></i>
+                            <i class="fas fa-sort ml-1" :class="{'fa-sort-up': sortColumn === 'employee_id' && sortDirection === 'asc', 'fa-sort-down': sortColumn === 'employee_id' && sortDirection === 'desc'}"></i>
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortEmployees('name')">
                             Name
@@ -87,25 +87,25 @@
                             Department
                             <i class="fas fa-sort ml-1" :class="{'fa-sort-up': sortColumn === 'department' && sortDirection === 'asc', 'fa-sort-down': sortColumn === 'department' && sortDirection === 'desc'}"></i>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortEmployees('position')">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortEmployees('role')">
                             Position
-                            <i class="fas fa-sort ml-1" :class="{'fa-sort-up': sortColumn === 'position' && sortDirection === 'asc', 'fa-sort-down': sortColumn === 'position' && sortDirection === 'desc'}"></i>
+                            <i class="fas fa-sort ml-1" :class="{'fa-sort-up': sortColumn === 'role' && sortDirection === 'asc', 'fa-sort-down': sortColumn === 'role' && sortDirection === 'desc'}"></i>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortEmployees('status')">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer" @click="sortEmployees('user_status')">
                             Status
-                            <i class="fas fa-sort ml-1" :class="{'fa-sort-up': sortColumn === 'status' && sortDirection === 'asc', 'fa-sort-down': sortColumn === 'status' && sortDirection === 'desc'}"></i>
+                            <i class="fas fa-sort ml-1" :class="{'fa-sort-up': sortColumn === 'user_status' && sortDirection === 'asc', 'fa-sort-down': sortColumn === 'user_status' && sortDirection === 'desc'}"></i>
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <template x-for="employee in filteredEmployees" :key="employee.id">
+                    <template x-for="employee in paginatedEmployees" :key="employee.id">
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" x-text="employee.employee_id"></td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        <img class="h-10 w-10 rounded-full" :src="employee.profile_photo_url" :alt="employee.first_name + ' ' + employee.last_name">
+                                        <img class="h-10 w-10 rounded-full" :src="employee.profile_photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(employee.first_name + ' ' + employee.last_name)" :alt="employee.first_name + ' ' + employee.last_name">
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900" x-text="employee.first_name + ' ' + employee.last_name"></div>
@@ -119,12 +119,12 @@
                                 <span 
                                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
                                     :class="{
-                                        'bg-green-100 text-green-800': employee.status === 'Active',
-                                        'bg-yellow-100 text-yellow-800': employee.status === 'On Leave',
-                                        'bg-red-100 text-red-800': employee.status === 'Terminated',
-                                        'bg-gray-100 text-gray-800': employee.status === 'Suspended'
+                                        'bg-green-100 text-green-800': employee.user_status === 'Active',
+                                        'bg-yellow-100 text-yellow-800': employee.user_status === 'On Leave',
+                                        'bg-red-100 text-red-800': employee.user_status === 'Terminated',
+                                        'bg-gray-100 text-gray-800': employee.user_status === 'Suspended'
                                     }"
-                                    x-text="employee.status || 'Active'"
+                                    x-text="employee.user_status"
                                 ></span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -141,7 +141,7 @@
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button 
-                                    @click="confirmDeleteEmployee(employee.id)"
+                                    @click="confirmDeleteEmployee(employee.id, employee.first_name + ' ' + employee.last_name)"
                                     class="text-red-600 hover:text-red-900"
                                 >
                                     <i class="fas fa-trash"></i>
@@ -234,23 +234,23 @@
 
     <!-- Employee Grid View -->
     <div x-show="viewMode === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <template x-for="employee in filteredEmployees" :key="employee.id">
+        <template x-for="employee in paginatedEmployees" :key="employee.id">
             <div class="employee-card bg-white rounded-lg shadow overflow-hidden transition duration-300 ease-in-out">
                 <div class="p-4 border-b">
                     <div class="flex items-center">
-                        <img class="w-16 h-16 rounded-full mr-4" :src="employee.profile_photo_url" :alt="employee.first_name + ' ' + employee.last_name">
+                        <img class="w-16 h-16 rounded-full mr-4" :src="employee.profile_photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(employee.first_name + ' ' + employee.last_name)" :alt="employee.first_name + ' ' + employee.last_name">
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900" x-text="employee.first_name + ' ' + employee.last_name"></h3>
                             <p class="text-sm text-gray-500" x-text="employee.role"></p>
                             <span 
                                 class="mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
                                 :class="{
-                                    'bg-green-100 text-green-800': employee.status === 'Active',
-                                    'bg-yellow-100 text-yellow-800': employee.status === 'On Leave',
-                                    'bg-red-100 text-red-800': employee.status === 'Terminated',
-                                    'bg-gray-100 text-gray-800': employee.status === 'Suspended'
+                                    'bg-green-100 text-green-800': employee.user_status === 'Active',
+                                    'bg-yellow-100 text-yellow-800': employee.user_status === 'On Leave',
+                                    'bg-red-100 text-red-800': employee.user_status === 'Terminated',
+                                    'bg-gray-100 text-gray-800': employee.user_status === 'Suspended'
                                 }"
-                                x-text="employee.status || 'Active'"
+                                x-text="employee.user_status"
                             ></span>
                         </div>
                     </div>
@@ -268,6 +268,10 @@
                         <i class="fas fa-envelope mr-2"></i>
                         <span x-text="employee.email"></span>
                     </div>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-phone mr-2"></i>
+                        <span x-text="employee.phone || 'N/A'"></span>
+                    </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 flex justify-end space-x-2">
                     <button 
@@ -283,7 +287,7 @@
                         <i class="fas fa-edit mr-1"></i> Edit
                     </button>
                     <button 
-                        @click="confirmDeleteEmployee(employee.id)"
+                        @click="confirmDeleteEmployee(employee.id, employee.first_name + ' ' + employee.last_name)"
                         class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none"
                     >
                         <i class="fas fa-trash mr-1"></i> Delete
@@ -338,6 +342,31 @@
                             >
                         </div>
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                            <select 
+                                x-model="currentEmployee.gender"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            >
+                                <option value="">Select Gender</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                            <input 
+                                x-model="currentEmployee.dob"
+                                type="date" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            >
+                        </div>
+                        
+                        <!-- Contact Information -->
+                        <div class="md:col-span-2 mt-4">
+                            <h4 class="text-lg font-medium text-gray-900 mb-3">Contact Information</h4>
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                             <input 
                                 x-model="currentEmployee.email"
@@ -345,6 +374,22 @@
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" 
                                 required
                             >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                            <input 
+                                x-model="currentEmployee.phone"
+                                type="tel" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            >
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <textarea 
+                                x-model="currentEmployee.address"
+                                rows="2" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            ></textarea>
                         </div>
                         
                         <!-- Employment Information -->
@@ -369,9 +414,9 @@
                                 required
                             >
                                 <option value="">Select Department</option>
-                                @foreach($departments as $dept)
-                                    <option value="{{ $dept }}">{{ $dept }}</option>
-                                @endforeach
+                                <template x-for="dept in departments" :key="dept">
+                                    <option x-text="dept" :value="dept"></option>
+                                </template>
                             </select>
                         </div>
                         <div>
@@ -388,15 +433,56 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status *</label>
                             <select 
-                                x-model="currentEmployee.category"
+                                x-model="currentEmployee.user_status"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                required
+                            >
+                                <option value="">Select Status</option>
+                                <option>Active</option>
+                                <option>On Leave</option>
+                                <option>Suspended</option>
+                                <option>Terminated</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Hire Date *</label>
+                            <input 
+                                x-model="currentEmployee.hire_date"
+                                type="date" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                                required
+                            >
+                        </div>
+                        
+                        <!-- Emergency Contact -->
+                        <div class="md:col-span-2 mt-4">
+                            <h4 class="text-lg font-medium text-gray-900 mb-3">Emergency Contact</h4>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Name</label>
+                            <input 
+                                x-model="currentEmployee.emergency_contact_name"
+                                type="text" 
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                             >
-                                <option value="staff">Staff</option>
-                                <option value="faculty">Faculty</option>
-                                <option value="admin">Admin</option>
-                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Phone</label>
+                            <input 
+                                x-model="currentEmployee.emergency_contact_phone"
+                                type="tel" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            >
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact Relationship</label>
+                            <input 
+                                x-model="currentEmployee.emergency_contact_relationship"
+                                type="text" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            >
                         </div>
                     </div>
                     <div class="mt-6 flex justify-end space-x-3">
@@ -415,6 +501,131 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Employee Modal -->
+    <div 
+        x-show="isViewModalOpen" 
+        @keydown.escape="closeViewModal()"
+        class="modal fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+    >
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <h3 class="text-xl font-semibold">Employee Details</h3>
+                <button @click="closeViewModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mt-4">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="w-full md:w-1/3">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex flex-col items-center">
+                                <img class="w-32 h-32 rounded-full mb-4" :src="viewedEmployee.profile_photo_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(viewedEmployee.first_name + ' ' + viewedEmployee.last_name)" :alt="viewedEmployee.first_name + ' ' + viewedEmployee.last_name">
+                                <h3 class="text-lg font-semibold text-gray-900" x-text="viewedEmployee.first_name + ' ' + viewedEmployee.last_name"></h3>
+                                <p class="text-sm text-gray-500" x-text="viewedEmployee.role"></p>
+                                <span 
+                                    class="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                                    :class="{
+                                        'bg-green-100 text-green-800': viewedEmployee.user_status === 'Active',
+                                        'bg-yellow-100 text-yellow-800': viewedEmployee.user_status === 'On Leave',
+                                        'bg-red-100 text-red-800': viewedEmployee.user_status === 'Terminated',
+                                        'bg-gray-100 text-gray-800': viewedEmployee.user_status === 'Suspended'
+                                    }"
+                                    x-text="viewedEmployee.user_status"
+                                ></span>
+                            </div>
+                            <div class="mt-6 space-y-3">
+                                <div>
+                                    <p class="text-xs font-medium text-gray-500 uppercase">Employee ID</p>
+                                    <p class="text-sm" x-text="viewedEmployee.employee_id"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-medium text-gray-500 uppercase">Department</p>
+                                    <p class="text-sm" x-text="viewedEmployee.department"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-medium text-gray-500 uppercase">Hire Date</p>
+                                    <p class="text-sm" x-text="viewedEmployee.hire_date"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-2/3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Personal Information -->
+                            <div class="md:col-span-2">
+                                <h4 class="text-lg font-medium text-gray-900 mb-3 border-b pb-2">Personal Information</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">First Name</p>
+                                        <p class="text-sm" x-text="viewedEmployee.first_name"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Last Name</p>
+                                        <p class="text-sm" x-text="viewedEmployee.last_name"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Gender</p>
+                                        <p class="text-sm" x-text="viewedEmployee.gender || 'N/A'"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Date of Birth</p>
+                                        <p class="text-sm" x-text="viewedEmployee.dob || 'N/A'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Information -->
+                            <div class="md:col-span-2">
+                                <h4 class="text-lg font-medium text-gray-900 mb-3 border-b pb-2">Contact Information</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Email</p>
+                                        <p class="text-sm" x-text="viewedEmployee.email"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Phone</p>
+                                        <p class="text-sm" x-text="viewedEmployee.phone || 'N/A'"></p>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Address</p>
+                                        <p class="text-sm" x-text="viewedEmployee.address || 'N/A'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emergency Contact -->
+                            <div class="md:col-span-2">
+                                <h4 class="text-lg font-medium text-gray-900 mb-3 border-b pb-2">Emergency Contact</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Name</p>
+                                        <p class="text-sm" x-text="viewedEmployee.emergency_contact_name || 'N/A'"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Phone</p>
+                                        <p class="text-sm" x-text="viewedEmployee.emergency_contact_phone || 'N/A'"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-medium text-gray-500 uppercase">Relationship</p>
+                                        <p class="text-sm" x-text="viewedEmployee.emergency_contact_relationship || 'N/A'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button 
+                    @click="closeViewModal()"
+                    class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                    Close
+                </button>
             </div>
         </div>
     </div>
@@ -453,39 +664,32 @@
     </div>
 </div>
 
-
 @push('scripts')
 <script>
     function employeeModule() {
         return {
             // Data
-            employees: @json($employees->map(function($emp) {
-                return [
-                    'id' => $emp->id,
-                    'employee_id' => $emp->employee_id,
-                    'first_name' => $emp->first_name,
-                    'last_name' => $emp->last_name,
-                    'email' => $emp->email,
-                    'profile_photo_url' => $emp->profile_photo_url,
-                    'department' => $emp->department,
-                    'role' => $emp->role,
-                    'status' => 'Active',
-                    'category' => $emp->category ?? 'staff',
-                    'created_at' => $emp->created_at->toDateTimeString()
-                ];
-            }),
+            employees: @json($employees),
             departments: @json($departments),
             filteredEmployees: [],
             currentEmployee: {
-                id: '',
-                employee_id: '',
                 first_name: '',
                 last_name: '',
                 email: '',
+                phone: '',
+                gender: '',
+                dob: '',
+                address: '',
+                employee_id: '',
                 department: '',
                 role: '',
-                category: 'staff'
+                user_status: 'Active',
+                hire_date: '',
+                emergency_contact_name: '',
+                emergency_contact_phone: '',
+                emergency_contact_relationship: ''
             },
+            viewedEmployee: {},
             employeeToDelete: null,
             employeeToDeleteName: '',
             searchQuery: '',
@@ -493,9 +697,10 @@
             selectedStatus: '',
             viewMode: 'list',
             isEmployeeModalOpen: false,
+            isViewModalOpen: false,
             isDeleteModalOpen: false,
             isEditing: false,
-            sortColumn: 'id',
+            sortColumn: 'employee_id',
             sortDirection: 'asc',
             pageSize: 8,
             currentPage: 1,
@@ -509,7 +714,7 @@
             filterEmployees() {
                 this.filteredEmployees = this.employees.filter(employee => {
                     const matchesSearch = 
-                        `${employee.first_name} ${employee.last_name}`.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                        (employee.first_name + ' ' + employee.last_name).toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                         employee.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                         employee.employee_id.toLowerCase().includes(this.searchQuery.toLowerCase());
                     
@@ -519,7 +724,7 @@
                     
                     const matchesStatus = 
                         !this.selectedStatus || 
-                        employee.status === this.selectedStatus;
+                        employee.user_status === this.selectedStatus;
                     
                     return matchesSearch && matchesDepartment && matchesStatus;
                 });
@@ -540,32 +745,13 @@
                 }
 
                 this.filteredEmployees.sort((a, b) => {
-                    let valueA, valueB;
+                    let valueA = a[column];
+                    let valueB = b[column];
 
-                    switch (column) {
-                        case 'id':
-                            valueA = a.employee_id;
-                            valueB = b.employee_id;
-                            break;
-                        case 'name':
-                            valueA = `${a.last_name}, ${a.first_name}`;
-                            valueB = `${b.last_name}, ${b.first_name}`;
-                            break;
-                        case 'department':
-                            valueA = a.department;
-                            valueB = b.department;
-                            break;
-                        case 'position':
-                            valueA = a.role;
-                            valueB = b.role;
-                            break;
-                        case 'status':
-                            valueA = a.status;
-                            valueB = b.status;
-                            break;
-                        default:
-                            valueA = a[column];
-                            valueB = b[column];
+                    // Special handling for name which is a combination of first and last
+                    if (column === 'name') {
+                        valueA = `${a.last_name}, ${a.first_name}`;
+                        valueB = `${b.last_name}, ${b.first_name}`;
                     }
 
                     if (valueA < valueB) {
@@ -610,14 +796,21 @@
             openAddEmployeeModal() {
                 this.isEditing = false;
                 this.currentEmployee = {
-                    id: '',
-                    employee_id: `EMP-${Math.floor(1000 + Math.random() * 9000)}`,
                     first_name: '',
                     last_name: '',
                     email: '',
+                    phone: '',
+                    gender: '',
+                    dob: '',
+                    address: '',
+                    employee_id: `EMP-${Math.floor(1000 + Math.random() * 9000)}`,
                     department: '',
                     role: '',
-                    category: 'staff'
+                    user_status: 'Active',
+                    hire_date: new Date().toISOString().split('T')[0],
+                    emergency_contact_name: '',
+                    emergency_contact_phone: '',
+                    emergency_contact_relationship: ''
                 };
                 this.isEmployeeModalOpen = true;
             },
@@ -635,29 +828,33 @@
                 const url = this.isEditing 
                     ? `/employees/${this.currentEmployee.id}`
                     : '/employees';
-                    
+                
                 const method = this.isEditing ? 'PUT' : 'POST';
                 
                 fetch(url, {
                     method: method,
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: JSON.stringify(this.currentEmployee)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err; });
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         window.location.reload();
                     } else {
-                        alert('Error: ' + (data.message || 'An error occurred'));
+                        alert('Error: ' + data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred');
+                    alert('An error occurred: ' + (error.message || 'Please check the form and try again.'));
                 });
             },
 
@@ -665,46 +862,5 @@
                 this.isEmployeeModalOpen = false;
             },
 
-            confirmDeleteEmployee(id) {
-                const employee = this.employees.find(e => e.id === id);
-                if (employee) {
-                    this.employeeToDelete = id;
-                    this.employeeToDeleteName = `${employee.first_name} ${employee.last_name}`;
-                    this.isDeleteModalOpen = true;
-                }
-            },
-
-            deleteEmployee() {
-                if (!this.employeeToDelete) return;
-
-                fetch(`/employees/${this.employeeToDelete}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    } else {
-                        alert('Error: ' + (data.message || 'An error occurred'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred');
-                });
-            },
-
-            closeDeleteModal() {
-                this.isDeleteModalOpen = false;
-                this.employeeToDelete = null;
-                this.employeeToDeleteName = '';
-            }
-        };
-    }
-</script>
-@endpush
-@endsection
+            viewEmployee(id) {
+                const employee = this.employees.find(e

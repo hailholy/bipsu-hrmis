@@ -18,11 +18,16 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'phone',
+        'address',
+        'gender',
+        'dob',
         'employee_id',
         'department',
         'role',
         'profile_photo_path',
-        'category'
+        'user_status',
+        'hire_date',
     ];
 
 
@@ -33,7 +38,8 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'dob' => 'date',
+        'hire_date' => 'date',
     ];
 
         public function getProfilePhotoUrlAttribute()

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIPSU HRMIS - @yield('title')</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
@@ -190,10 +191,7 @@
                     <h1 class="text-2xl font-semibold text-gray-800">@yield('title')</h1>
                     
                     <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <i class="fas fa-bell text-gray-600 text-xl cursor-pointer"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">3</span>
-                        </div>
+                        @include('components.notification_dropdown')
                         <div class="dropdown relative">
                             <div class="flex items-center cursor-pointer">
                                 <img src="{{ auth()->user()->profile_photo_url }}" alt="Profile" class="w-8 h-8 rounded-full">
@@ -349,6 +347,41 @@
             // Add resize event listener
             window.addEventListener('resize', handleResize);
         });
+
+        // Poll for new notifications every 60 seconds (fallback if Pusher not available)
+        setInterval(() => {
+            fetch('/notifications/count')
+                .then(response => response.json())
+                .then(data => {
+                    updateNotificationCount(data.count);
+                });
+        }, 60000);
+        
+        function updateNotificationCount(count) {
+            const counter = document.querySelector('.notification-counter');
+            if (counter) {
+                if (count > 0) {
+                    counter.textContent = count;
+                    counter.classList.remove('hidden');
+                } else {
+                    counter.classList.add('hidden');
+                }
+            }
+        }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md shadow-md text-white ${
+                type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+            } z-50`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
     </script>
     @endpush
     @stack('scripts')

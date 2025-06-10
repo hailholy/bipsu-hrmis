@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('net_salary', 10, 2);
             $table->date('payment_date');
-            $table->enum('status', ['pending', 'paid'])->default('pending');
+            $table->enum('payroll_status', ['pending', 'paid'])->default('pending');
             $table->timestamps();
         });
     }

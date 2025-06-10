@@ -13,6 +13,8 @@ use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\TravelController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\NotificationController;
+
 
 
 
@@ -55,7 +57,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // Sidebar Routes
+
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
+
+    // Add this inside the auth middleware group in web.php
+    Route::prefix('employees')->group(function() {
+        Route::post('/', [EmployeeController::class, 'store'])->name('employees.store');
+        Route::put('/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
+        Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+    });
 
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
 
@@ -68,10 +78,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+
+    // Notification Routes
+    // Notification routes
+    Route::prefix('notifications')->group(function() {
+    Route::get('/', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+});
 });
 
 Route::get('/dashboard/department-data', [DashboardController::class, 'getDepartmentData']);
-
-
-
 
