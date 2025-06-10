@@ -513,13 +513,13 @@
                                         <i class="fas fa-upload mr-2"></i> Upload Photo
                                     </label>
                                     <button 
-                                        type="button" 
-                                        @click="currentEmployee.profile_photo_path = null" 
-                                        x-show="currentEmployee.profile_photo_path"
-                                        class="ml-2 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                    >
-                                        <i class="fas fa-trash mr-2"></i> Remove
-                                    </button>
+                                    type="button" 
+                                    @click="currentEmployee.profile_photo_url = null; currentEmployee.remove_profile_photo = true" 
+                                    x-show="currentEmployee.profile_photo_url"
+                                    class="ml-2 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                >
+                                    <i class="fas fa-trash mr-2"></i> Remove
+                                </button>
                                 </div>
                             </div>
                         </div>
@@ -912,19 +912,6 @@
                 const modal = document.querySelector('[x-show="isViewModalOpen"]');
                 if (modal) modal.style.display = 'none';
             },
-            
-            handleProfilePhotoUpload(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    // In a real app, you would upload the file to the server here
-                    // For this demo, we'll just create a local URL
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.currentEmployee.profile_photo_path = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            },
 
             handleProfilePhotoUpload(event) {
                 const file = event.target.files[0];
@@ -978,6 +965,10 @@
                 if (this.isEditing) {
                     formData.append('_method', 'PUT');
                 }
+
+                if (this.currentEmployee.remove_profile_photo) {
+                    formData.append('remove_profile_photo', '1');
+                }
                 
                 fetch(url, {
                     method: this.isEditing ? 'POST' : 'POST', // Always POST, _method handles PUT
@@ -1016,6 +1007,7 @@
                     this.showToast(error.message, 'error');
                     console.error('Error:', error);
                 });
+
             },
             
             deleteEmployee() {
