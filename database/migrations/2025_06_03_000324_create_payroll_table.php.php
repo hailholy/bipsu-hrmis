@@ -6,18 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('payroll', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
             $table->decimal('basic_salary', 10, 2);
-            $table->decimal('allowances', 10, 2)->default(0);
-            $table->decimal('deductions', 10, 2)->default(0);
-            $table->decimal('tax', 10, 2)->default(0);
+            $table->decimal('allowances', 10, 2);
+            $table->decimal('deductions', 10, 2);
+            $table->decimal('tax', 10, 2);
             $table->decimal('net_salary', 10, 2);
             $table->date('payment_date');
             $table->enum('payroll_status', ['pending', 'paid'])->default('pending');
@@ -25,11 +22,8 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        //
+        Schema::dropIfExists('payroll');
     }
 };

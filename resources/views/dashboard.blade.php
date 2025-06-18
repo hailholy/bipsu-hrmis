@@ -20,19 +20,19 @@
             </div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                    <i class="fas fa-calendar-check text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-gray-500">Present Today</p>
-                    <h3 class="text-2xl font-bold">{{ $attendanceStats->present ?? 0 }}</h3>
-                    <p class="text-sm {{ ($attendanceStats->present ?? 0) > 0 ? 'text-green-500' : 'text-gray-500' }}">
-                        {{ $totalEmployees > 0 ? round(($attendanceStats->present ?? 0)/$totalEmployees*100) : 0 }}% of workforce
-                    </p>
-                </div>
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                <i class="fas fa-calendar-check text-xl"></i>
+            </div>
+            <div>
+                <p class="text-gray-500">Present Today</p>
+                <h3 class="text-2xl font-bold" data-stat="present">{{ $attendanceStats->present ?? 0 }}</h3>
+                <p class="text-sm {{ ($attendanceStats->present ?? 0) > 0 ? 'text-green-500' : 'text-gray-500' }}">
+                    {{ $totalEmployees > 0 ? round(($attendanceStats->present ?? 0)/$totalEmployees*100) : 0 }}% of workforce
+                </p>
             </div>
         </div>
+    </div>
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
@@ -142,7 +142,7 @@
                     <div class="space-y-3">
                         @foreach($recentCheckins as $checkin)
                         <div class="flex items-center">
-                            <img class="w-8 h-8 rounded-full mr-3" src="{{ $checkin->profile_photo_url }}" alt="{{ $checkin->first_name }} {{ $checkin->last_name }}">
+                            <img class="w-8 h-8 rounded-full mr-3" src="{{ $checkin->profile_photo_path }}" alt="{{ $checkin->first_name }} {{ $checkin->last_name }}">
                             <div class="flex-1">
                                 <p class="text-sm font-medium">{{ $checkin->first_name }} {{ $checkin->last_name }}</p>
                                 <p class="text-xs text-gray-500">{{ $checkin->department }}</p>

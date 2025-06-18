@@ -109,6 +109,74 @@
                 width: 180px;
             }
         }
+
+
+    /* Custom styles for attendance system */
+    .biometric-placeholder {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .attendance-card {
+        transition: all 0.3s ease;
+    }
+
+    .attendance-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .status-present {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-absent {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    .status-late {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-leave {
+        background-color: #dbeafe;
+        color: #1e40af;
+    }
+
+    .qr-scanner {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+        border: 3px dashed #3b82f6;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .qr-scanner video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .qr-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 1.2rem;
+    }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -382,8 +450,10 @@
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
+       
     </script>
     @endpush
     @stack('scripts')
 </body>
 </html>
+

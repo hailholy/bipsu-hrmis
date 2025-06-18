@@ -66,9 +66,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
         Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
     });
-
-    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
-
+    
+    Route::prefix('attendance')->group(function() {
+        Route::get('/', [AttendanceController::class, 'index'])->name('attendance');
+        Route::get('/stats', [AttendanceController::class, 'stats'])->name('attendance.stats');
+        Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
+        Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check-out');
+        Route::post('/qr-check-in', [AttendanceController::class, 'qrCheckIn'])->name('attendance.qr-check-in');
+    });
+    
     Route::get('/leave', [LeaveController::class, 'index'])->name('leave');
 
     Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll');

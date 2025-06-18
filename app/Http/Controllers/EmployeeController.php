@@ -97,7 +97,7 @@ class EmployeeController extends Controller
             'address' => 'sometimes|string',
             'hire_date' => 'sometimes|date',
             'user_status' => 'sometimes|string|in:Active,On Leave,Suspended,Terminated',
-            'profile_photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         // Handle profile photo upload

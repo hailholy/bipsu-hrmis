@@ -32,8 +32,8 @@ class DashboardController extends Controller
         $payrollData = DB::table('payroll')
             ->select(
                 DB::raw('SUM(net_salary) as total_payroll'),
-                DB::raw('SUM(CASE WHEN status = "paid" THEN net_salary ELSE 0 END) as processed'),
-                DB::raw('SUM(CASE WHEN status = "pending" THEN net_salary ELSE 0 END) as pending'),
+                DB::raw('SUM(CASE WHEN payroll_status = "paid" THEN net_salary ELSE 0 END) as processed'),
+                DB::raw('SUM(CASE WHEN payroll_status = "pending" THEN net_salary ELSE 0 END) as pending'),
                 DB::raw('SUM(CASE WHEN users.role = "faculty" THEN payroll.net_salary ELSE 0 END) as faculty_payroll'),
                 DB::raw('SUM(CASE WHEN users.role = "staff" THEN payroll.net_salary ELSE 0 END) as staff_payroll')
             )
@@ -46,7 +46,7 @@ class DashboardController extends Controller
         $lastMonthPayroll = DB::table('payroll')
             ->whereMonth('payment_date', $lastMonth)
             ->whereYear('payment_date', $lastMonthYear)
-            ->where('status', 'paid')
+            ->where('payroll_status', 'paid')
             ->sum('net_salary');
 
         // Calculate percentage change
@@ -64,30 +64,34 @@ class DashboardController extends Controller
         ];
 
         // Get attendance stats
-        $attendanceStats = DB::table('attendance')
+    
+
+        // Get recent check-ins
+        $attendanceStats = DB::table('attendances')
             ->select(
-                DB::raw('SUM(CASE WHEN status = "present" THEN 1 ELSE 0 END) as present'),
-                DB::raw('SUM(CASE WHEN status = "absent" THEN 1 ELSE 0 END) as absent'),
-                DB::raw('SUM(CASE WHEN status = "on_leave" THEN 1 ELSE 0 END) as on_leave')
+                DB::raw('COUNT(DISTINCT CASE WHEN status = "present" THEN user_id END) as present'),
+                DB::raw('COUNT(DISTINCT CASE WHEN status = "absent" THEN user_id END) as absent'),
+                DB::raw('COUNT(DISTINCT CASE WHEN status = "on_leave" THEN user_id END) as on_leave')
             )
             ->where('date', $today)
             ->first();
 
-        // Get recent check-ins
-        $recentCheckins = DB::table('attendance')
-            ->join('users', 'attendance.user_id', '=', 'users.id')
+        // Get recent check-ins with proper user photo URL
+        $recentCheckins = DB::table('attendances')
+            ->join('users', 'attendances.user_id', '=', 'users.id')
             ->select(
                 'users.first_name',
                 'users.last_name',
                 'users.department',
-                'users.profile_photo_path',
-                'attendance.check_in'
+                DB::raw('COALESCE(users.profile_photo_path, "default-profile.jpg") as profile_photo_path'),
+                'attendances.check_in'
             )
-            ->where('attendance.date', $today)
-            ->whereNotNull('attendance.check_in')
-            ->orderBy('attendance.check_in', 'desc')
+            ->where('attendances.date', $today)
+            ->whereNotNull('attendances.check_in')
+            ->orderBy('attendances.check_in', 'desc')
             ->take(5)
             ->get();
+
 
         // Get upcoming payments
         $upcomingPayments = DB::table('payroll')
@@ -100,7 +104,7 @@ class DashboardController extends Controller
                 'payroll.net_salary',
                 'payroll.payment_date'
             )
-            ->where('payroll.status', 'pending')
+            ->where('payroll.payroll_status', 'pending')
             ->whereDate('payroll.payment_date', '>=', now())
             ->orderBy('payroll.payment_date')
             ->take(3)
