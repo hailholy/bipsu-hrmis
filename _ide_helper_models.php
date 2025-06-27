@@ -25,7 +25,7 @@ namespace App\Models{
  * @property-read mixed $color
  * @property-read mixed $icon
  * @property-read mixed $title
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Activity query()
@@ -47,18 +47,14 @@ namespace App\Models{
  * @property int $id
  * @property int $user_id
  * @property \Illuminate\Support\Carbon $date
- * @property \Illuminate\Support\Carbon|null $check_in
- * @property \Illuminate\Support\Carbon|null $check_out
+ * @property string|null $check_in
+ * @property string|null $check_out
  * @property string $status
  * @property string|null $notes
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $hours_worked
- * @property-read mixed $is_late
- * @property-read \App\Models\User $user
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance forDate($date)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance forMonth($month)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance forUser($userId)
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance query()
@@ -71,7 +67,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance withStatus($status)
  */
 	class Attendance extends \Eloquent {}
 }

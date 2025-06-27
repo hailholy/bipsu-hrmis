@@ -16,16 +16,15 @@ class Attendance extends Model
         'check_in',
         'check_out',
         'status',
+        'method',
         'notes'
     ];
 
     protected $casts = [
         'date' => 'date',
-        'check_in' => 'datetime:H:i',
-        'check_out' => 'datetime:H:i'
     ];
 
-    protected $appends = ['hours_worked', 'is_late'];
+    protected $appends = ['hours_worked'];
 
     public function user()
     {
@@ -35,42 +34,13 @@ class Attendance extends Model
     public function getHoursWorkedAttribute()
     {
         if (!$this->check_in || !$this->check_out) {
-            return 0;
+            return '0h 0m';
         }
 
-        $checkIn = Carbon::parse($this->check_in);
-        $checkOut = Carbon::parse($this->check_out);
+        $start = Carbon::parse($this->check_in);
+        $end = Carbon::parse($this->check_out);
+        $diff = $start->diff($end);
 
-        return round($checkOut->diffInMinutes($checkIn) / 60, 2);
-    }
-
-    public function getIsLateAttribute()
-    {
-        if (!$this->check_in) {
-            return false;
-        }
-
-        return Carbon::parse($this->check_in)->gt(Carbon::parse('08:30'));
-    }
-
-    public function scopeForUser($query, $userId)
-    {
-        return $query->where('user_id', $userId);
-    }
-
-    public function scopeForDate($query, $date)
-    {
-        return $query->where('date', $date);
-    }
-
-    public function scopeForMonth($query, $month)
-    {
-        return $query->whereMonth('date', Carbon::parse($month)->month)
-            ->whereYear('date', Carbon::parse($month)->year);
-    }
-
-    public function scopeWithStatus($query, $status)
-    {
-        return $query->where('status', $status);
+        return $diff->h . 'h ' . $diff->i . 'm';
     }
 }

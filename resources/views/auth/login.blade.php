@@ -279,8 +279,8 @@
                                             <span class="ml-2 text-sm text-gray-700">Employee</span>
                                         </label>
                                         <label class="inline-flex items-center">
-                                            <input type="radio" name="role" value="manager" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
-                                            <span class="ml-2 text-sm text-gray-700">Manager</span>
+                                            <input type="radio" name="role" value="hr" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                                            <span class="ml-2 text-sm text-gray-700">HR</span>
                                         </label>
                                         <label class="inline-flex items-center">
                                             <input type="radio" name="role" value="admin" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">

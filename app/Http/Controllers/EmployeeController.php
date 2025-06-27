@@ -26,7 +26,7 @@ class EmployeeController extends Controller
             ]);
         }
         
-        return view('employees', [
+        return view('admin.employees', [
             'employees' => $employees,
             'departments' => $departments
         ]);

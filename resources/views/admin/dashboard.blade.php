@@ -3,6 +3,30 @@
 @section('title', 'Dashboard')
 
 @section('content')
+    <style>
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    </style>
+
+
+<main class="p-6">
+    <!-- Welcome Banner -->
+    <div class="container mx-auto px-4"> 
+        <div class="bg-blue-800 text-white rounded-xl p-6 mb-6 shadow-lg">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">Welcome back, {{ auth()->user()->first_name }}!</h2>
+                    <p class="opacity-90">Here's what's happening today.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <span class="bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        {{ now()->format('l, F j, Y') }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div class="container mx-auto px-4 py-6">
     <!-- Stats Cards -->
@@ -79,24 +103,31 @@
             </div>
         </div>
 
-        <!-- Recent Activities -->
+       <!-- Gender Distribution Chart -->
         <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold mb-4">Recent Activities</h2>
-            <div class="space-y-4">
-                @forelse($recentActivities as $activity)
-                    <div class="flex items-start">
-                        <div class="p-2 rounded-full bg-{{ $activity['color'] }}-100 text-{{ $activity['color'] }}-600 mr-3">
-                            <i class="fas {{ $activity['icon'] }} text-sm"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium">{{ $activity['title'] }}</p>
-                            <p class="text-xs text-gray-500">{{ $activity['message'] }}</p>
-                            <p class="text-xs text-gray-400">{{ $activity['time'] }}</p>
-                        </div>
-                    </div>
-                @empty
-                    <p class="text-sm text-gray-500">No recent activities</p>
-                @endforelse
+            <h2 class="text-lg font-semibold mb-4">Gender Distribution</h2>
+            <div class="chart-container" style="position: relative; height: 250px;">
+                <canvas id="genderChart"></canvas>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+                @php
+                    $total = $genderStats['male'] + $genderStats['female'] + $genderStats['other'];
+                    $malePercentage = $total > 0 ? round(($genderStats['male'] / $total) * 100) : 0;
+                    $femalePercentage = $total > 0 ? round(($genderStats['female'] / $total) * 100) : 0;
+                    $otherPercentage = $total > 0 ? round(($genderStats['other'] / $total) * 100) : 0;
+                @endphp
+                <div class="p-2">
+                    <div class="text-xl font-bold text-blue-600">{{ $genderStats['male'] }}</div>
+                    <div class="text-xs text-gray-500">Male ({{ $malePercentage }}%)</div>
+                </div>
+                <div class="p-2">
+                    <div class="text-xl font-bold text-pink-600">{{ $genderStats['female'] }}</div>
+                    <div class="text-xs text-gray-500">Female ({{ $femalePercentage }}%)</div>
+                </div>
+                <div class="p-2">
+                    <div class="text-xl font-bold text-purple-600">{{ $genderStats['other'] }}</div>
+                    <div class="text-xs text-gray-500">Other ({{ $otherPercentage }}%)</div>
+                </div>
             </div>
         </div>
     </div>
@@ -392,6 +423,52 @@
         @if(session('error'))
             showToast("{{ session('error') }}", 'error');
         @endif
+    });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        // Gender Chart
+        const genderCtx = document.getElementById('genderChart').getContext('2d');
+        const genderChart = new Chart(genderCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Male', 'Female', 'Other'],
+                datasets: [{
+                    data: [@json($genderStats['male']), @json($genderStats['female']), @json($genderStats['other'])],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(153, 102, 255, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
     });
 </script>
 @endpush

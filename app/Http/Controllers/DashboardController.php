@@ -178,7 +178,14 @@ class DashboardController extends Controller
                 ];
             });
 
-        return view('dashboard', [
+
+        $genderStats = [
+            'male' => User::where('gender', 'Male')->count(),
+            'female' => User::where('gender', 'Female')->count(),
+            'other' => User::where('gender', 'Other')->count()
+        ];
+
+        return view('admin.dashboard', [
             'user' => $user,
             'unreadNotifications' => $unreadNotifications,
             'stats' => $stats,
@@ -193,24 +200,8 @@ class DashboardController extends Controller
             'departmentColorMap' => $colorMap,
             'departments' => $departments,
             'recentEmployees' => $recentEmployees,
-            'recentActivities' => $recentActivities,
+            'genderStats' => $genderStats,
             'totalEmployees' => $stats['totalEmployees']
         ]);
-    }
-
-    private function getDefaultMessage($activity)
-    {
-        switch ($activity->type) {
-            case 'new_employee':
-                return optional($activity->user)->full_name . ' joined the team';
-            case 'contract_renewal':
-                return optional($activity->user)->full_name . '\'s contract was extended';
-            case 'payroll_processed':
-                return 'Payroll was processed for all employees';
-            case 'leave_request':
-                return optional($activity->user)->full_name . ' applied for leave';
-            default:
-                return 'New activity occurred';
-        }
     }
 }

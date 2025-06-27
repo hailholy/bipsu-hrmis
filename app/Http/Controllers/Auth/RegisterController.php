@@ -20,7 +20,7 @@ class RegisterController extends Controller
                 'registerPassword' => ['required', 'confirmed', Rules\Password::defaults()],
                 'employeeId' => ['required', 'string', 'max:255', 'unique:users,employee_id'],
                 'department' => ['required', 'string', 'max:255'],
-                'role' => ['required', 'string', 'in:employee,manager,admin'],
+                'role' => ['required', 'string', 'in:employee,hr,admin'],
             ]);
 
             $user = User::create([

@@ -451,7 +451,7 @@
                             >
                                 <option value="">Select Position</option>
                                 <option value="Employee">Employee</option>
-                                <option value="Manager">Manager</option>
+                                <option value="HR">HR</option>
                                 <option value="Admin">Administrator</option>
                             </select>
                         </div>

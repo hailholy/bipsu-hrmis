@@ -196,39 +196,39 @@
             </div>
             <nav class="mt-6">
                 <div class="px-4 py-2">
-                    <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
-                        <i class="fas fa-tachometer-alt mr-3"></i>
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-home mr-3"></i>
                         <span class="nav-text">Dashboard</span>
                     </a>
                 </div>
                 <div class="px-4 py-2">
-                    <a href="{{ route('employees') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
+                    <a href="{{ route('admin.employees') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
                         <i class="fas fa-users mr-3"></i>
                         <span class="nav-text">Employees</span>
                     </a>
                 </div>
                 <div class="px-4 py-2">
-                    <a href="{{ route('attendance') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
+                    <a href="{{ route('admin.attendance') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
                         <i class="fas fa-calendar-alt mr-3"></i>
                         <span class="nav-text">Attendance</span>
                     </a>
                 </div>
                 <div class="px-4 py-2">
-                    <a href="{{ route('payroll') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
-                        <i class="fas fa-money-bill-wave mr-3"></i>
-                        <span class="nav-text">Payroll</span>
-                    </a>
-                </div>
-                <div class="px-4 py-2">
-                    <a href="{{ route('leave') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
+                    <a href="{{ route('admin.leave') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
                         <i class="fas fa-calendar-minus mr-3"></i>
                         <span class="nav-text">Leave</span>
                     </a>
                 </div>
                 <div class="px-4 py-2">
-                    <a href="{{ route('travel') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
+                    <a href="{{ route('admin.travel') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
                         <i class="fas fa-plane mr-3"></i>
                         <span class="nav-text">Travel</span>
+                    </a>
+                </div>
+                 <div class="px-4 py-2">
+                    <a href="{{ route('payroll') }}" class="flex items-center px-4 py-3 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-money-bill-wave mr-3"></i>
+                        <span class="nav-text">Payroll</span>
                     </a>
                 </div>
                 <div class="px-4 py-2">
