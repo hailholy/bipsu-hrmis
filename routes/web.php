@@ -63,37 +63,26 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin-attendance', [AttendanceController::class, 'index'])->name('admin.attendance');
     Route::prefix('attendance')->group(function() {
         Route::get('/', [AttendanceController::class, 'index'])->name('attendance');
-        Route::get('/stats', [AttendanceController::class, 'stats'])->name('attendance.stats');
         Route::post('/clock-in', [AttendanceController::class, 'clockIn'])->name('attendance.clockIn');
-        Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('attendance.check-in');
         Route::post('/clock-out', [AttendanceController::class, 'clockOut'])->name('attendance.clockOut');
-        Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('attendance.check-out');
-        Route::post('/qr-check-in', [AttendanceController::class, 'qrCheckIn'])->name('attendance.qr-check-in');
         Route::delete('/{attendance}', [AttendanceController::class, 'destroy'])->name('attendance.destroy');
         Route::get('/export', [AttendanceController::class, 'export'])->name('attendance.export');
-        Route::get('/history', [AttendanceController::class, 'history'])->name('attendance.history');
-        Route::get('/user/{user}', [AttendanceController::class, 'userAttendance'])->name('attendance.user');
-        Route::post('/manual-entry', [AttendanceController::class, 'manualEntry'])->name('attendance.manual-entry');
-        Route::put('/update/{attendance}', [AttendanceController::class, 'update'])->name('attendance.update');
         Route::get('/monthly-comparison-data', [AttendanceController::class, 'getMonthlyComparisonData'])->name('attendance.monthly-comparison-data');
-        Route::get('/attendance/stats-by-period', [AttendanceController::class, 'getStatsByPeriod'])->name('attendance.stats-by-period');
     });
 
     // Leave
     Route::get('/leave', [LeaveController::class, 'index'])->name('leave');
     Route::get('/admin-leave', [LeaveController::class, 'index'])->name('admin.leave');
-    Route::get('/leave/chart-data', [LeaveController::class, 'chartData'])->name('leave.chart-data');
     Route::prefix('leave')->group(function() {
-    Route::put('/leave/{leave}', [LeaveController::class, 'update'])->name('leave.update');
-    Route::post('/', [LeaveController::class, 'store'])->name('leave.store');
-    Route::put('/{leave}', [LeaveController::class, 'update'])->name('leave.update');
-});
+        Route::put('/leave/{leave}', [LeaveController::class, 'update'])->name('leave.update');
+        Route::post('/', [LeaveController::class, 'store'])->name('leave.store');
+        Route::put('/{leave}', [LeaveController::class, 'update'])->name('leave.update');
+    });
 
-    // Leave
+    // Travel
     Route::get('/travel', [TravelController::class, 'index'])->name('travel');
     Route::get('/admin-travel', [TravelController::class, 'index'])->name('admin.travel');
 
-  
     Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll');
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');

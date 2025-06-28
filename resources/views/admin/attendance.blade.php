@@ -140,126 +140,8 @@
                 </div>
             </div>
         </div>
-       
-        <!-- Today's Summary Card -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Today's Summary</h2>
-                    <p class="text-sm text-gray-500">{{ now()->format('F j, Y - l') }}</p>
-                </div>
-                <div class="mt-2 md:mt-0">
-                    <div class="relative">
-                        <select id="period-selector" class="appearance-none bg-gray-100 border-0 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                            <option value="today">Today</option>
-                            <option value="yesterday">Yesterday</option>
-                            <option value="week">This Week</option>
-                            <option value="month">This Month</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="attendance-card bg-blue-50 p-4 rounded-lg shadow border-l-blue-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500">Present</p>
-                            <h3 class="text-3xl font-bold mt-2 text-gray-800" id="present-count">{{ $todayStats['present'] }}</h3>
-                        </div>
-                        <div class="p-3 rounded-full bg-green-100 text-green-600">
-                            <i class="fas fa-user-check text-xl"></i>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-4">
-                        <span class="{{ $percentageChanges['present'] >= 0 ? 'text-green-500' : 'text-red-500' }} font-medium">
-                            {{ $percentageChanges['present'] >= 0 ? '+' : '' }}{{ $percentageChanges['present'] }}%
-                        </span> from yesterday
-                    </p>
-                </div>
-                
-                <div class="attendance-card bg-red-50 p-4 rounded-lg shadow border-l-red-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500">Absent</p>
-                            <h3 class="text-3xl font-bold mt-2 text-gray-800" id="absent-count">{{ $todayStats['absent'] }}</h3>
-                        </div>
-                        <div class="p-3 rounded-full bg-red-100 text-red-600">
-                            <i class="fas fa-user-slash text-xl"></i>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-4">
-                        <span class="{{ $percentageChanges['absent'] >= 0 ? 'text-red-500' : 'text-green-500' }} font-medium">
-                            {{ $percentageChanges['absent'] >= 0 ? '+' : '' }}{{ $percentageChanges['absent'] }}%
-                        </span> from yesterday
-                    </p>
-                </div>
-                
-                <div class="attendance-card bg-yellow-50 p-4 rounded-lg shadow border-l-yellow-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500">Late Arrivals</p>
-                            <h3 class="text-3xl font-bold mt-2 text-gray-800" id="late-count">{{ $todayStats['late'] }}</h3>
-                        </div>
-                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                            <i class="fas fa-clock text-xl"></i>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-4">
-                        <span class="{{ $percentageChanges['late'] >= 0 ? 'text-yellow-500' : 'text-green-500' }} font-medium">
-                            {{ $percentageChanges['late'] >= 0 ? '+' : '' }}{{ $percentageChanges['late'] }}%
-                        </span> from yesterday
-                    </p>
-                </div>
-                
-                <div class="attendance-card bg-green-50 p-4 rounded-lg shadow border-l-green-500">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500">On Leave</p>
-                            <h3 class="text-3xl font-bold mt-2 text-gray-800" id="leave-count">{{ $todayStats['on_leave'] }}</h3>
-                        </div>
-                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-                            <i class="fas fa-umbrella-beach text-xl"></i>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-500 mt-4">
-                        <span class="{{ $percentageChanges['on_leave'] >= 0 ? 'text-blue-500' : 'text-red-500' }} font-medium">
-                            {{ $percentageChanges['on_leave'] >= 0 ? '+' : '' }}{{ $percentageChanges['on_leave'] }}%
-                        </span> from yesterday
-                    </p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Attendance Chart Section -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Attendance Overview</h2>
-                    <p class="text-sm text-gray-500">Monthly attendance comparison</p>
-                </div>
-                <div class="mt-2 md:mt-0">
-                    <select id="chart-period-selector" class="appearance-none bg-gray-100 border-0 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                        <option value="2" selected>Last 2 Months</option>
-                        <option value="4">Last 4 Months</option>
-                        <option value="6">Last 6 Months</option>
-                        <option value="8">Last 8 Months</option>
-                        <option value="12">Last 12 Months</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="chart-container" style="height: 400px;">
-                <canvas id="attendanceChart"></canvas>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Left Column - Biometric Section -->
-            <div class="lg:col-span-1 space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Biometric Scanner -->
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <div class="flex items-center justify-between mb-4">
@@ -341,8 +223,54 @@
                             <i class="fas fa-info-circle mr-2 text-blue-400"></i> Your attendance will be recorded immediately
                         </p>
                     </div>
+            </div>
+
+        
+        <!-- Quick Stats -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4">Today's Summary</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-500">Present</p>
+                    <p class="text-2xl font-bold text-blue-600">{{ $todaySummary->present_count ?? 0 }}</p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-500">Late</p>
+                    <p class="text-2xl font-bold text-yellow-600">{{ $todaySummary->late_count ?? 0 }}</p>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-500">Absent</p>
+                    <p class="text-2xl font-bold text-red-600">{{ $todaySummary->absent_count ?? 0 }}</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <p class="text-sm text-gray-500">On Leave</p>
+                    <p class="text-2xl font-bold text-green-600">{{ $todaySummary->on_leave_count ?? 0 }}</p>
                 </div>
             </div>
+        </div>
+       
+        <!-- Attendance Chart Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-800">Attendance Overview</h2>
+                    <p class="text-sm text-gray-500">Monthly attendance comparison</p>
+                </div>
+                <div class="mt-2 md:mt-0">
+                    <select id="chart-period-selector" class="appearance-none bg-gray-100 border-0 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        <option value="2" selected>Last 2 Months</option>
+                        <option value="4">Last 4 Months</option>
+                        <option value="6">Last 6 Months</option>
+                        <option value="8">Last 8 Months</option>
+                        <option value="12">Last 12 Months</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="chart-container" style="height: 400px;">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
 
             <!-- Right Column - Attendance Records -->
             <div class="lg:col-span-2 space-y-6">
@@ -538,16 +466,12 @@
 
         // Function to open manual entry modal
         function openManualEntryModal() {
-            // You would implement a modal here
             alert('Manual entry modal would open here');
-            // Example: $('#manualEntryModal').modal('show');
         }
 
         // Function to edit attendance
         function editAttendance(id) {
-            // You would implement an edit modal here
             alert(`Edit attendance record with ID: ${id}`);
-            // Example: fetch data and populate edit modal
         }
 
         // Toast notification function
@@ -565,7 +489,6 @@
             }, 3000);
         }
 
-        // Period selector function for Today's Summary card
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize current time display
             function updateCurrentTime() {
@@ -581,79 +504,6 @@
 
             updateCurrentTime();
             setInterval(updateCurrentTime, 60000);
-
-            // Handle period selector change
-            const periodSelector = document.getElementById('period-selector');
-            if (periodSelector) {
-                periodSelector.addEventListener('change', function() {
-                    const period = this.value;
-                    
-                    // Show loading state
-                    document.querySelectorAll('#present-count, #absent-count, #late-count, #leave-count').forEach(el => {
-                        el.innerHTML = '<span class="loading-spinner"></span>';
-                    });
-                    
-                    // Fetch data
-                    fetch(`/attendance/stats?period=${period}`, {
-                        headers: {
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Update the counts
-                            document.getElementById('present-count').textContent = data.stats.present;
-                            document.getElementById('absent-count').textContent = data.stats.absent;
-                            document.getElementById('late-count').textContent = data.stats.late;
-                            document.getElementById('leave-count').textContent = data.stats.on_leave;
-                            
-                            // Update the date display
-                            const dateElement = document.querySelector('.flex-col.md\\:flex-row div p');
-                            const today = new Date();
-                            
-                            switch (period) {
-                                case 'today':
-                                    dateElement.textContent = today.toLocaleDateString('en-US', { 
-                                        month: 'long', 
-                                        day: 'numeric', 
-                                        year: 'numeric', 
-                                        weekday: 'long' 
-                                    });
-                                    break;
-                                case 'yesterday':
-                                    const yesterday = new Date(today);
-                                    yesterday.setDate(yesterday.getDate() - 1);
-                                    dateElement.textContent = yesterday.toLocaleDateString('en-US', { 
-                                        month: 'long', 
-                                        day: 'numeric', 
-                                        year: 'numeric', 
-                                        weekday: 'long' 
-                                    });
-                                    break;
-                                case 'week':
-                                    const startOfWeek = new Date(today);
-                                    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-                                    const endOfWeek = new Date(startOfWeek);
-                                    endOfWeek.setDate(startOfWeek.getDate() + 6);
-                                    dateElement.textContent = 
-                                        'Week of ' + startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + 
-                                        ' - ' + endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                                    break;
-                                case 'month':
-                                    dateElement.textContent = today.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-                                    break;
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching attendance stats:', error);
-                        showToast('Failed to load attendance data', 'error');
-                    });
-                });
-            }
 
             // Biometric scanner interaction
             const scanner = document.querySelector('.biometric-scanner');
@@ -676,162 +526,114 @@
                 });
             }
 
-            // Handle clock in/out buttons
-            document.getElementById('clock-in-btn')?.addEventListener('click', async function() {
-                try {
-                    const response = await fetch('{{ route("attendance.check-in") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        }
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok) {
-                        showToast(result.message, 'success');
-                        setTimeout(() => location.reload(), 1500);
-                    } else {
-                        showToast(result.error || 'Check-in failed', 'error');
-                    }
-                } catch (error) {
-                    showToast('An error occurred', 'error');
-                }
-            });
-
-            document.getElementById('clock-out-btn')?.addEventListener('click', async function() {
-                try {
-                    const response = await fetch('{{ route("attendance.check-out") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        }
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok) {
-                        showToast(result.message, 'success');
-                        setTimeout(() => location.reload(), 1500);
-                    } else {
-                        showToast(result.error || 'Check-out failed', 'error');
-                    }
-                } catch (error) {
-                    showToast('An error occurred', 'error');
-                }
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-        let attendanceChart;
-        const ctx = document.getElementById('attendanceChart').getContext('2d');
-        
-        // Initialize chart with default 2 months
-        initChart(2);
-        
-        // Handle period selector change
-        document.getElementById('chart-period-selector').addEventListener('change', function() {
-            initChart(parseInt(this.value));
-        });
-
-        function initChart(months = 2) {  // Default to 2 months
-            document.getElementById('attendanceChart').innerHTML = '<div class="flex items-center justify-center h-full"><div class="loading-spinner" style="width: 3rem; height: 3rem;"></div></div>';
+            // Initialize attendance chart
+            let attendanceChart;
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
             
-            fetch(`/attendance/monthly-comparison-data?months=${months}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        renderChart(data.data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching chart data:', error);
-                    document.getElementById('attendanceChart').innerHTML = '<p class="text-red-500 text-center py-10">Failed to load chart data</p>';
-                });
-        }
-        
-        function renderChart(chartData) {
-            if (attendanceChart) {
-                attendanceChart.destroy();
+            // Initialize chart with default 2 months
+            initChart(2);
+            
+            // Handle period selector change
+            document.getElementById('chart-period-selector').addEventListener('change', function() {
+                initChart(parseInt(this.value));
+            });
+
+            function initChart(months = 2) {
+                document.getElementById('attendanceChart').innerHTML = '<div class="flex items-center justify-center h-full"><div class="loading-spinner" style="width: 3rem; height: 3rem;"></div></div>';
+                
+                fetch(`/attendance/monthly-comparison-data?months=${months}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            renderChart(data.data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching chart data:', error);
+                        document.getElementById('attendanceChart').innerHTML = '<p class="text-red-500 text-center py-10">Failed to load chart data</p>';
+                    });
             }
             
-            const datasets = [
-                {
-                    label: 'Present',
-                    data: chartData.current.present,
-                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Late',
-                    data: chartData.current.late,
-                    backgroundColor: 'rgba(255, 206, 86, 0.7)',
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Absent',
-                    data: chartData.current.absent,
-                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'On Leave',
-                    data: chartData.current.on_leave,
-                    backgroundColor: 'rgba(153, 102, 255, 0.7)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
+            function renderChart(chartData) {
+                if (attendanceChart) {
+                    attendanceChart.destroy();
                 }
-            ];
-            
-            attendanceChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: chartData.labels,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            stacked: false,
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            stacked: false,
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0
-                            }
-                        }
+                
+                const datasets = [
+                    {
+                        label: 'Present',
+                        data: chartData.current.present,
+                        backgroundColor: 'rgba(191, 219, 254, 1)',  // bg-blue-50:
+                        borderColor: 'rgba(59, 130, 246, 1)',        
+                        borderWidth: 1,
                     },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.raw;
+                    {
+                      label: 'Late',
+                        data: chartData.current.late,
+                        backgroundColor: 'rgba(253, 230, 138, 1)',  // bg-yellow-50: 
+                        borderColor: 'rgba(234, 179, 8, 1)',        
+                        borderWidth: 1,
+                    },
+                    {
+                        label: 'Absent',
+                        data: chartData.current.absent,
+                        backgroundColor:'rgba(252, 165, 165, 1)',  // bg-red-50: 
+                        borderColor: 'rgba(239, 68, 68, 1)',          
+                        borderWidth: 1,
+                    },
+                    {
+                        label: 'On Leave',
+                        data: chartData.current.on_leave,
+                        backgroundColor: 'rgba(134, 239, 172, 1)',  // bg-green-50:
+                        borderColor: 'rgba(16, 185, 129, 1)',        
+                        borderWidth: 1,
+                    }
+                ];
+                
+                attendanceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                stacked: false,
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                stacked: false,
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
                                 }
                             }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.raw;
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 1000
                         }
-                    },
-                    animation: {
-                        duration: 1000
                     }
-                }
-            });
-        }
-    });
+                });
+            }
+        });
     </script>
 @endsection

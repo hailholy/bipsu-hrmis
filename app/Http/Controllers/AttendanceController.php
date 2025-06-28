@@ -26,18 +26,6 @@ class AttendanceController extends Controller
             
         $monthlySummary = $this->getMonthlySummary($user->id);
 
-        // Get attendance statistics
-        $todayStats = $this->getAttendanceStats($today);
-        $yesterdayStats = $this->getAttendanceStats(Carbon::yesterday()->format('Y-m-d'));
-
-        // Calculate percentage changes
-        $percentageChanges = [
-            'present' => $this->calculatePercentageChange($todayStats['present'], $yesterdayStats['present']),
-            'late' => $this->calculatePercentageChange($todayStats['late'], $yesterdayStats['late']),
-            'absent' => $this->calculatePercentageChange($todayStats['absent'], $yesterdayStats['absent']),
-            'on_leave' => $this->calculatePercentageChange($todayStats['on_leave'], $yesterdayStats['on_leave']),
-        ];
-
         // Filter attendance records
         $attendanceQuery = Attendance::with('user')
             ->when($request->date, function($query) use ($request) {
@@ -86,20 +74,51 @@ class AttendanceController extends Controller
 
         $attendanceRecords = $attendanceQuery->paginate(10);
 
+        $today = now()->format('Y-m-d');
+        $user = auth()->user();
+        
+        // Get user-specific data
+        $todayRecord = Attendance::where('user_id', $user->id)
+            ->where('date', $today)
+            ->first();
+            
+        $history = Attendance::where('user_id', $user->id)
+            ->orderBy('date', 'desc')
+            ->take(30)
+            ->get();
+            
+        $monthlySummary = $this->getMonthlySummary($user->id);
+        $todaySummary = $this->getTodaySummary();
+
         return view('admin.attendance', [
             'todayRecord' => $todayRecord,
             'history' => $history,
             'monthlySummary' => $monthlySummary,
-            'todayStats' => $todayStats,
-            'percentageChanges' => $percentageChanges,
             'attendanceRecords' => $attendanceRecords,
             'departments' => User::whereNotNull('department')
                 ->distinct()
                 ->pluck('department'),
-            'user' => $user
+            'user' => $user,
+            'todaySummary' => $todaySummary 
+            
         ]);
     }
     
+    private function getTodaySummary()
+    {
+        $today = now()->format('Y-m-d');
+        
+        return Attendance::where('date', $today)
+            ->selectRaw('
+                COUNT(*) as total_employees,
+                SUM(CASE WHEN status = "Present" THEN 1 ELSE 0 END) as present_count,
+                SUM(CASE WHEN status = "Late" THEN 1 ELSE 0 END) as late_count,
+                SUM(CASE WHEN status = "Absent" THEN 1 ELSE 0 END) as absent_count,
+                SUM(CASE WHEN status = "On_Leave" THEN 1 ELSE 0 END) as on_leave_count
+            ')
+            ->first();
+    }
+
     public function clockIn(Request $request)
     {
         $user = auth()->user();
@@ -141,7 +160,6 @@ class AttendanceController extends Controller
         return back()->with('success', 'Checked out successfully at ' . now()->format('h:i A'));
     }
     
-
     public function destroy(Attendance $attendance)
     {
         try {
@@ -169,84 +187,6 @@ class AttendanceController extends Controller
                 SUM(CASE WHEN status = "Absent" THEN 1 ELSE 0 END) as absent_days
             ')
             ->first();
-    }
-
-    private function getAttendanceStats($date)
-    {
-        $stats = Attendance::where('date', $date)
-            ->selectRaw('
-                SUM(CASE WHEN status = "Present" THEN 1 ELSE 0 END) as present,
-                SUM(CASE WHEN status = "Late" THEN 1 ELSE 0 END) as late,
-                SUM(CASE WHEN status = "Absent" THEN 1 ELSE 0 END) as absent,
-                SUM(CASE WHEN status = "On_Leave" THEN 1 ELSE 0 END) as on_leave
-            ')
-            ->first();
-
-        return [
-            'present' => $stats->present ?? 0,
-            'late' => $stats->late ?? 0,
-            'absent' => $stats->absent ?? 0,
-            'on_leave' => $stats->on_leave ?? 0
-        ];
-    }
-    
-
-    private function calculatePercentageChange($current, $previous)
-    {
-        if ($previous == 0) {
-            return $current == 0 ? 0 : 100;
-        }
-        return round((($current - $previous) / $previous) * 100);
-    }
-
-    public function getStatsByPeriod(Request $request)
-    {
-        $period = $request->input('period');
-        $date = null;
-
-        switch ($period) {
-            case 'yesterday':
-                $date = Carbon::yesterday()->format('Y-m-d');
-                break;
-            case 'week':
-                $date = [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()];
-                break;
-            case 'month':
-                $date = [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()];
-                break;
-            default: // today
-                $date = Carbon::today()->format('Y-m-d');
-        }
-
-        if (is_array($date)) {
-            $stats = Attendance::whereBetween('date', $date)
-                ->selectRaw('
-                    SUM(CASE WHEN status = "Present" THEN 1 ELSE 0 END) as present,
-                    SUM(CASE WHEN status = "Late" THEN 1 ELSE 0 END) as late,
-                    SUM(CASE WHEN status = "Absent" THEN 1 ELSE 0 END) as absent,
-                    SUM(CASE WHEN status = "On_Leave" THEN 1 ELSE 0 END) as on_leave
-                ')
-                ->first();
-        } else {
-            $stats = Attendance::where('date', $date)
-                ->selectRaw('
-                    SUM(CASE WHEN status = "Present" THEN 1 ELSE 0 END) as present,
-                    SUM(CASE WHEN status = "Late" THEN 1 ELSE 0 END) as late,
-                    SUM(CASE WHEN status = "Absent" THEN 1 ELSE 0 END) as absent,
-                    SUM(CASE WHEN status = "On_Leave" THEN 1 ELSE 0 END) as on_leave
-                ')
-                ->first();
-        }
-
-        return response()->json([
-            'success' => true,
-            'stats' => [
-                'present' => $stats->present ?? 0,
-                'late' => $stats->late ?? 0,
-                'absent' => $stats->absent ?? 0,
-                'on_leave' => $stats->on_leave ?? 0
-            ]
-        ]);
     }
 
     public function export(Request $request)
@@ -365,5 +305,4 @@ class AttendanceController extends Controller
             ]
         ]);
     }
-    
 }

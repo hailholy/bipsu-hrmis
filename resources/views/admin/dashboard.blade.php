@@ -263,7 +263,7 @@
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="px-6 py-4 border-b flex items-center justify-between">
             <h2 class="text-lg font-semibold">Recent Employees</h2>
-            <a href="{{ route('employees') }}" 
+            <a href="{{ route('admin.employees') }}" 
             class="text-xs bg-white hover:bg-gray-50 text-blue-600 px-1 py-1 rounded flex items-center transition-colors duration-200">
                 <i class="fas fa-users mr-1"></i> View All Employees
             </a>

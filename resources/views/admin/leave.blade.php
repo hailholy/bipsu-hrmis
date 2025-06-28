@@ -392,8 +392,8 @@
                     {
                         label: 'Approved',
                         data: @json($approvedData),
-                        backgroundColor: '#4f46e5', // Indigo-600
-                        borderColor: '#4f46e5',
+                        backgroundColor: '#10B981', // Green-500
+                        borderColor: '#10B981',
                         borderWidth: 1,
                         borderRadius: 6,
                         barPercentage: 0.7
@@ -401,8 +401,8 @@
                     {
                         label: 'Pending',
                         data: @json($pendingData),
-                        backgroundColor: '#f59e0b', // Amber-500
-                        borderColor: '#f59e0b',
+                        backgroundColor:'#F59E0B', // Yellow-500
+                        borderColor: '#F59E0B',
                         borderWidth: 1,
                         borderRadius: 6,
                         barPercentage: 0.7
@@ -410,8 +410,8 @@
                     {
                         label: 'Rejected',
                         data: @json($rejectedData),
-                        backgroundColor: '#ef4444', // Red-500
-                        borderColor: '#ef4444',
+                        backgroundColor: '#EF4444', // Red-500
+                        borderColor: '#EF4444',
                         borderWidth: 1,
                         borderRadius: 6,
                         barPercentage: 0.7
