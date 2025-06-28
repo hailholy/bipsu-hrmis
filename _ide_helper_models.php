@@ -50,6 +50,7 @@ namespace App\Models{
  * @property string|null $check_in
  * @property string|null $check_out
  * @property string $status
+ * @property string $method
  * @property string|null $notes
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -63,12 +64,45 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Attendance whereUserId($value)
  */
 	class Attendance extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $type
+ * @property \Illuminate\Support\Carbon $start_date
+ * @property \Illuminate\Support\Carbon $end_date
+ * @property string $reason
+ * @property string $status
+ * @property string|null $admin_notes
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereAdminNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Leave whereUserId($value)
+ */
+	class Leave extends \Eloquent {}
 }
 
 namespace App\Models{

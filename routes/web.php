@@ -76,11 +76,18 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/manual-entry', [AttendanceController::class, 'manualEntry'])->name('attendance.manual-entry');
         Route::put('/update/{attendance}', [AttendanceController::class, 'update'])->name('attendance.update');
         Route::get('/monthly-comparison-data', [AttendanceController::class, 'getMonthlyComparisonData'])->name('attendance.monthly-comparison-data');
+        Route::get('/attendance/stats-by-period', [AttendanceController::class, 'getStatsByPeriod'])->name('attendance.stats-by-period');
     });
 
     // Leave
     Route::get('/leave', [LeaveController::class, 'index'])->name('leave');
     Route::get('/admin-leave', [LeaveController::class, 'index'])->name('admin.leave');
+    Route::get('/leave/chart-data', [LeaveController::class, 'chartData'])->name('leave.chart-data');
+    Route::prefix('leave')->group(function() {
+    Route::put('/leave/{leave}', [LeaveController::class, 'update'])->name('leave.update');
+    Route::post('/', [LeaveController::class, 'store'])->name('leave.store');
+    Route::put('/{leave}', [LeaveController::class, 'update'])->name('leave.update');
+});
 
     // Leave
     Route::get('/travel', [TravelController::class, 'index'])->name('travel');

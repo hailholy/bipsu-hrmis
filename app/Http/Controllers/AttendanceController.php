@@ -189,6 +189,7 @@ class AttendanceController extends Controller
             'on_leave' => $stats->on_leave ?? 0
         ];
     }
+    
 
     private function calculatePercentageChange($current, $previous)
     {

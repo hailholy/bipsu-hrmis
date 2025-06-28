@@ -163,22 +163,6 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        //Recent activities
-        $recentActivities = Activity::with('user')
-            ->latest()
-            ->take(4)
-            ->get()
-            ->map(function ($activity) {
-                return [
-                    'icon' => $activity->icon,
-                    'color' => $activity->color,
-                    'title' => $activity->title,
-                    'message' => $activity->message ?? $this->getDefaultMessage($activity),
-                    'time' => $activity->created_at->diffForHumans()
-                ];
-            });
-
-
         $genderStats = [
             'male' => User::where('gender', 'Male')->count(),
             'female' => User::where('gender', 'Female')->count(),
